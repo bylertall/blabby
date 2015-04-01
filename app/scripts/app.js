@@ -71,7 +71,7 @@ app.factory('Room', ['$firebase', function($firebase){
   var rooms = $firebase(firebaseRef.child('rooms')).$asArray();
 
   var addRoom = function(roomName) {
-    rooms.$add({room: roomName})
+    rooms.$add({name: roomName})
       .then(function() {
         console.log('The room as been added!');
     });
