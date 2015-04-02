@@ -1,13 +1,10 @@
-<div class="row">
-  <div class="sidebar col-md-4">
-    <h1>{{home.title}}</h1>
-    <button class="btn btn-default" ng-click="home.roomModal()">New Room</button>
+<div class="sidebar col-sm-4">
+  <h1>{{home.title}}</h1>
+  <button class="btn btn-default" ng-click="home.roomModal()">Create Room</button>
 
-    <ul class="room-list">
-      <li ng-repeat="room in home.rooms">{{room.name}}</li>
-    </ul>
-  </div>
-
-  <div class="content-container col-md-8" ui-view>THIS IS WHERE THE CHATS WILL GO. DUH!</div>
-
+  <ul class="room-list">
+    <li ng-repeat="room in home.rooms">{{room.name}}</li>
+  </ul>
 </div>
+
+<div class="chat-container col-sm-8" ui-view>THIS IS WHERE THE CHATS WILL GO. DUH!</div>

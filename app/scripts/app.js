@@ -20,7 +20,7 @@ app.config(['$stateProvider', function($stateProvider) {
 app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
   var vm = this;
 
-  vm.title = "Blabby".toUpperCase();
+  vm.title = 'Blabby';
 
   //Array of rooms from Firebase
   vm.rooms = Room.all;
