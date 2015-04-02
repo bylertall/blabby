@@ -10,7 +10,7 @@ $accent-color: #B0DED9;
 }
 
 
-
+// Set height & font
 html {
   height: 100%;
   body {
@@ -22,6 +22,7 @@ html {
   }
 }
 
+// Sidebar
 .sidebar {
   background-color: $accent-color;
   height: 100%;
@@ -63,6 +64,16 @@ html {
   }
 }
 
-
+// Add room modal
+.center-modal {
+  position: fixed;
+  top: 20%;
+  z-index: 1050;
+  input {
+    width: 100%;
+    height: 2em;
+    font-size: 2em;
+  }
+}
 
 

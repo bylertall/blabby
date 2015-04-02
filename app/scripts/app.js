@@ -30,7 +30,9 @@ app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
     var modalInstance = $modal.open({
       templateUrl: '/templates/room-modal.html',
       controller: 'ModalInstanceCtrl',
-      controllerAs: 'modal'
+      controllerAs: 'modal',
+      windowClass: 'center-modal',
+      size: 'sm'
     });
 
     //Add room to firebase on modal.ok
