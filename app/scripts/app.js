@@ -8,9 +8,12 @@ app.config(['$stateProvider', function($stateProvider) {
     .state('home', {
       url:'',
       templateUrl: '/templates/home.html',
-      controller: 'HomeCtrl',
-      controllerAs: 'home'
+      controller: 'HomeCtrl as homeVm'
     })
+
+    // .state('home.chat', {
+
+    // })
 
 }])
 
@@ -30,7 +33,7 @@ app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
     var modalInstance = $modal.open({
       templateUrl: '/templates/room-modal.html',
       controller: 'ModalInstanceCtrl',
-      controllerAs: 'modal',
+      controllerAs: 'modalVm',
       windowClass: 'center-modal',
       size: 'sm'
     });
@@ -39,7 +42,19 @@ app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
     modalInstance.result.then(function(roomName) {
       Room.add(roomName);
     });
+  };
 
+
+  // Chatroom content
+  vm.currentRoom = null;
+
+  vm.setActiveRoom = function(roomId, roomName) {
+    vm.currentRoom = {};
+    vm.currentRoom.id = roomId;
+    vm.currentRoom.name = roomName;
+    vm.currentRoom.messages = Room.messages(roomId);
+
+    return vm.currentRoom;
   };
 
 }])
@@ -49,11 +64,12 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
 
   vm.roomName = '';
 
-  // Add method to submit modal input for new room
+  // Create new room on modal OK
   vm.ok = function() {
     $modalInstance.close(vm.roomName);
   };
 
+  // Dismiss modal
   vm.cancel = function() {
     $modalInstance.dismiss('cancel');
   };
@@ -65,12 +81,12 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
 
 /*Factories*/
 
-app.factory('Room', ['$firebase', function($firebase){
+app.factory('Room', ['$firebaseArray', function($firebaseArray){
   
   var firebaseAPI = 'https://blabby.firebaseio.com/';
   var firebaseRef = new Firebase(firebaseAPI);
 
-  var rooms = $firebase(firebaseRef.child('rooms')).$asArray();
+  var rooms = $firebaseArray(firebaseRef.child('rooms'));
 
   var addRoom = function(roomName) {
     rooms.$add({name: roomName})
@@ -78,10 +94,15 @@ app.factory('Room', ['$firebase', function($firebase){
         console.log('The room as been added!');
     });
   };
+
+  var getMessages = function(roomId) {
+    return $firebaseArray(firebaseRef.child('messages').orderByChild('roomId').equalTo(roomId));
+  };
   
   return {
     all: rooms,
-    add: addRoom
+    add: addRoom,
+    messages: getMessages
   }
   
 }])

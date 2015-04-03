@@ -60,6 +60,7 @@ html {
     font-weight: 300;
     li {
       margin-bottom: 0.5em;
+      cursor: pointer;
     }
   }
 }
@@ -75,5 +76,37 @@ html {
     font-size: 2em;
   }
 }
+
+// Chat messages
+.chat-container {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  li {
+    padding: 1em;
+    margin: 0;
+  }
+  .even {
+    background-color: #F6F7FB;
+  }
+}
+
+
+.username {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+
+.content {
+  font-size: 1.2em;
+  font-weight: 300;
+}
+
+.sent-at {
+  padding-top: 0.85em;
+}
+
 
 
