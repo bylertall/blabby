@@ -79,6 +79,11 @@ html {
 
 // Chat messages
 .chat-container {
+  h3 {
+    line-height: 2em;
+    padding-bottom: 0.5em;
+    color: #7D7D7A;
+  }
   ul {
     list-style: none;
     padding: 0;
@@ -88,7 +93,7 @@ html {
     margin: 0;
   }
   .even {
-    background-color: #F6F7FB;
+    background-color: #DFF1EF;
   }
 }
 
@@ -105,6 +110,7 @@ html {
 }
 
 .sent-at {
+  text-align: center;
   padding-top: 0.85em;
 }
 

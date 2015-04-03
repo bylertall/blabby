@@ -11,16 +11,16 @@
 <div ng-if="homeVm.currentRoom === null" class="chat-container col-sm-8">Select a chatroom!</div>
 
 <!-- If chatroom is selected, display messages for that room -->
-<div ng-if="homeVm.currentRoom !== 'null'" class="chat-container col-sm-8">
+<div ng-if="homeVm.currentRoom !== null" class="chat-container col-sm-8">
   <h3>{{homeVm.currentRoom.name}}</h3>
   <div class="message-list row">
     <ul>
       <li ng-repeat="message in homeVm.currentRoom.messages" ng-class-even="'even'" class="row">
-        <div class="message-container col-sm-11">
+        <div class="message-container col-sm-10">
           <div class="username">{{message.username}}</div>
           <div class="content">{{message.content}}</div>
         </div>
-        <div class="sent-at col-sm-1">
+        <div class="sent-at col-sm-2">
           <div class="date">{{message.sentAt | date: 'MMM d'}}</div>
           <div class="time">{{message.sentAt | date: 'shortTime'}}</div>
         </div>

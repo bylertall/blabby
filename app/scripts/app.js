@@ -1,6 +1,23 @@
 'use strict';
 
-var app = angular.module('blabby', ['ui.router', 'firebase', 'ui.bootstrap']);
+var app = angular.module('blabby', ['ui.router', 'firebase', 'ui.bootstrap', 'ngCookies']);
+
+// Cookie setup
+app.run(['$cookies', '$modal', function($cookies, $modal) {
+  
+  if ( !$cookies.blabbyCurrentUser || $cookies.blabbyCurrentUser === '' ) {
+    $modal.open({
+      templateUrl: '/templates/user-modal.html',
+      controller: 'ModalInstanceCtrl',
+      controllerAs: 'modalVm',
+      windowClass: 'center-modal',
+      size: 'sm'
+    }).result.then(function(userInput) {
+      $cookies.blabbyCurrentUser = userInput;
+    });
+  }
+}])
+
 
 app.config(['$stateProvider', function($stateProvider) {
 
@@ -62,7 +79,8 @@ app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
 app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalInstance, Room) {
   var vm = this;
 
-  vm.roomName = '';
+  vm.roomName;
+  vm.username;
 
   // Create new room on modal OK
   vm.ok = function() {
@@ -73,6 +91,11 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
   vm.cancel = function() {
     $modalInstance.dismiss('cancel');
   };
+
+  // For username setup
+  vm.setUsername = function() {
+    $modalInstance.close(vm.username);
+  }
 
 
 }])
