@@ -8,7 +8,7 @@
 </div>
 
 <!-- Placeholder if no chatroom is selected -->
-<div ng-if="homeVm.currentRoom === null" class="chat-container col-sm-8">Select a chatroom!</div>
+<div ng-if="homeVm.currentRoom === null" class="chat-landing col-sm-8">Welcome to Blabby! Please create a new room or choose an existing room.</div>
 
 <!-- If chatroom is selected, display messages for that room -->
 <div ng-if="homeVm.currentRoom !== null" class="chat-container col-sm-8">
@@ -21,10 +21,14 @@
           <div class="content">{{message.content}}</div>
         </div>
         <div class="sent-at col-sm-2">
-          <div class="date">{{message.sentAt | date: 'MMM d'}}</div>
           <div class="time">{{message.sentAt | date: 'shortTime'}}</div>
+          <div class="date">{{message.sentAt | date: 'MMM d'}}</div>
         </div>
       </li>
     </ul>
+  </div>
+  <div class="message-input-container row">
+    <input class="message-input col-sm-10" type="text" placeholder="Write your message here..." ng-model="homeVm.newMessage" ng-keyup="homeVm.sendOnEnter($event)">
+    <button class="message-send btn btn-default col-sm-2" ng-click="homeVm.submitNewMessage()">Send</button>
   </div>
 </div>

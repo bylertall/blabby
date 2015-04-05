@@ -10,13 +10,15 @@ app.run(['$cookies', '$modal', function($cookies, $modal) {
       templateUrl: '/templates/user-modal.html',
       controller: 'ModalInstanceCtrl',
       controllerAs: 'modalVm',
-      windowClass: 'center-modal',
+      windowClass: 'center-modal user-modal',
       size: 'sm'
     }).result.then(function(userInput) {
       $cookies.blabbyCurrentUser = userInput;
     });
   }
 }])
+
+app.constant('FIREBASE_API', 'https://blabby.firebaseio.com/')
 
 
 app.config(['$stateProvider', function($stateProvider) {
@@ -37,7 +39,7 @@ app.config(['$stateProvider', function($stateProvider) {
 
 /*Controllers*/
 
-app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
+app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', function(Room, Message, $modal, $cookies) {
   var vm = this;
 
   vm.title = 'Blabby';
@@ -51,7 +53,7 @@ app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
       templateUrl: '/templates/room-modal.html',
       controller: 'ModalInstanceCtrl',
       controllerAs: 'modalVm',
-      windowClass: 'center-modal',
+      windowClass: 'center-modal room-modal',
       size: 'sm'
     });
 
@@ -74,17 +76,44 @@ app.controller('HomeCtrl', ['Room', '$modal', function(Room, $modal) {
     return vm.currentRoom;
   };
 
+  // Send new message
+  vm.newMessage = '';
+
+  vm.submitNewMessage = function() {
+    var messageObj = {};
+
+    if(vm.newMessage !== '') {
+      messageObj.content = vm.newMessage;
+      messageObj.roomId = vm.currentRoom.id;
+      messageObj.sentAt = (new Date()).toISOString();
+      messageObj.username = $cookies.blabbyCurrentUser;
+
+      // clear user input
+      vm.newMessage = '';
+
+      return Message.send(messageObj);
+    } else {
+      alert('Your message is empty!');
+    }
+  };
+
+  // Send message on 'Enter' keypress
+  vm.sendOnEnter = function(event) {
+    if (event.keyCode === 13) {
+      vm.submitNewMessage();
+    }
+  };
+
 }])
 
 app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalInstance, Room) {
   var vm = this;
 
-  vm.roomName;
-  vm.username;
+  vm.userInput;
 
-  // Create new room on modal OK
-  vm.ok = function() {
-    $modalInstance.close(vm.roomName);
+  // Submit user input
+  vm.submit = function() {
+    $modalInstance.close(vm.userInput);
   };
 
   // Dismiss modal
@@ -92,10 +121,13 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
     $modalInstance.dismiss('cancel');
   };
 
-  // For username setup
-  vm.setUsername = function() {
-    $modalInstance.close(vm.username);
-  }
+
+  // Send message on 'Enter' keypress
+  vm.sendOnEnter = function(event) {
+    if (event.keyCode === 13) {
+      vm.submit();
+    }
+  };
 
 
 }])
@@ -104,10 +136,10 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
 
 /*Factories*/
 
-app.factory('Room', ['$firebaseArray', function($firebaseArray){
+app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, FIREBASE_API){
   
-  var firebaseAPI = 'https://blabby.firebaseio.com/';
-  var firebaseRef = new Firebase(firebaseAPI);
+  
+  var firebaseRef = new Firebase(FIREBASE_API);
 
   var rooms = $firebaseArray(firebaseRef.child('rooms'));
 
@@ -128,4 +160,26 @@ app.factory('Room', ['$firebaseArray', function($firebaseArray){
     messages: getMessages
   }
   
+}])
+
+app.factory('Message', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, FIREBASE_API) {
+  var firebaseRef = new Firebase(FIREBASE_API);
+
+  var messages = $firebaseArray(firebaseRef.child('messages'));
+
+  var addMessage = function(messageObj) {
+    messages.$add({
+      content: messageObj.content,
+      roomId: messageObj.roomId,
+      sentAt: messageObj.sentAt,
+      username: messageObj.username
+    }).then(function() {
+      console.log('You submitted a new message!');
+      console.log(messageObj.sentAt);
+    });
+  };
+
+  return {
+    send: addMessage
+  }
 }])
