@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "npm install && grunt build"
+    "postinstall": "grunt build"
   },
   "author": "Bloc and Nick Ferraro",
   "license": "ISC",
