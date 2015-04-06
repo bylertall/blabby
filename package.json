@@ -12,6 +12,9 @@
   "dependencies": {
     "hapi": "^7.5.0",
     "path": "^0.4.9",
+    "browserify": "^4.2.3",
+    "connect-modrewrite": "^0.7.9",
+    "es5-shim": "^4.0.1",
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "~1.0.0",
     "grunt-browserify": "^2.1.4",
@@ -21,10 +24,5 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-hapi": "^0.8.1",
     "grunt-sass": "~0.15.0"
-  },
-  "devDependencies": {
-    "browserify": "^4.2.3",
-    "connect-modrewrite": "^0.7.9",
-    "es5-shim": "^4.0.1"
   }
 }
