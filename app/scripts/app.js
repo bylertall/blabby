@@ -21,7 +21,9 @@ app.run(['$cookies', '$modal', function($cookies, $modal) {
 app.constant('FIREBASE_API', 'https://blabby.firebaseio.com/')
 
 
-app.config(['$stateProvider', function($stateProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+
+  $urlRouterProvider.otherwise('/');
 
   $stateProvider
     .state('home', {
@@ -30,9 +32,6 @@ app.config(['$stateProvider', function($stateProvider) {
       controller: 'HomeCtrl as homeVm'
     })
 
-    // .state('home.chat', {
-
-    // })
 
 }])
 
