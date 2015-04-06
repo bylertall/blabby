@@ -25,7 +25,7 @@ app.config(['$stateProvider', function($stateProvider) {
 
   $stateProvider
     .state('home', {
-      url:'',
+      url:'/',
       templateUrl: '/templates/home.html',
       controller: 'HomeCtrl as homeVm'
     })
@@ -39,10 +39,13 @@ app.config(['$stateProvider', function($stateProvider) {
 
 /*Controllers*/
 
-app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', function(Room, Message, $modal, $cookies) {
+app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', function(Room, Message, $modal, $cookies, $state) {
   var vm = this;
 
   vm.title = 'Blabby';
+  vm.stateReload = function() {
+    $state.reload();
+  };
 
   //Array of rooms from Firebase
   vm.rooms = Room.all;

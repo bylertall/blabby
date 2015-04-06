@@ -38,6 +38,7 @@ input:focus, .btn:focus {
     border-bottom: 1px solid #FFF;
     padding-bottom: 0.4em;
     margin-bottom: 0.4em;
+    cursor: pointer;
   }
   button.btn-default {
     width: 75%;
@@ -147,7 +148,7 @@ button.btn-default{
   }
   .list-container {
     position: relative;
-    top: 65px;
+    top: 85px;
     height: 100%;
     padding: 0;
     ul {

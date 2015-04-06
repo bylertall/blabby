@@ -1,5 +1,5 @@
 <div class="sidebar col-sm-4">
-  <h1>{{homeVm.title}}</h1>
+  <h1 ng-click="homeVm.stateReload()">{{homeVm.title}}</h1>
   <button class="btn btn-default" ng-click="homeVm.roomModal()">Create Room</button>
 
   <ul class="room-list">
