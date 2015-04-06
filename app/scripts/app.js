@@ -113,7 +113,11 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
 
   // Submit user input
   vm.submit = function() {
-    $modalInstance.close(vm.userInput);
+    if (vm.userInput !== undefined) {
+      $modalInstance.close(vm.userInput);
+    } else {
+      alert('You didn\'t enter a room name! How about entering at least one character?');
+    }
   };
 
   // Dismiss modal
@@ -146,7 +150,7 @@ app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, 
   var addRoom = function(roomName) {
     rooms.$add({name: roomName})
       .then(function() {
-        console.log('The room as been added!');
+        console.log('A new room has been added!');
     });
   };
 
@@ -162,7 +166,7 @@ app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, 
   
 }])
 
-app.factory('Message', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, FIREBASE_API) {
+app.factory('Message', ['$firebaseArray', 'FIREBASE_API', '$timeout', function($firebaseArray, FIREBASE_API, $timeout) {
   var firebaseRef = new Firebase(FIREBASE_API);
 
   var messages = $firebaseArray(firebaseRef.child('messages'));
@@ -174,8 +178,11 @@ app.factory('Message', ['$firebaseArray', 'FIREBASE_API', function($firebaseArra
       sentAt: messageObj.sentAt,
       username: messageObj.username
     }).then(function() {
-      console.log('You submitted a new message!');
-      console.log(messageObj.sentAt);
+      console.log('A new message was submitted');
+      $timeout (function() {
+        var divMessageList = document.getElementById('message-list');
+        divMessageList.scrollTop = divMessageList.scrollHeight;
+      }, 0);
     });
   };
 

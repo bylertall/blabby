@@ -8,17 +8,20 @@
 </div>
 
 <!-- Placeholder if no chatroom is selected -->
-<div ng-if="homeVm.currentRoom === null" class="chat-landing col-sm-8">Welcome to Blabby! Please create a new room or choose an existing room.</div>
+<div ng-if="homeVm.currentRoom === null" class="chat-landing col-sm-8">
+  <h2>Welcome to Blabby!</h2>
+  <span>Please create a new room or choose an existing room.</span>
+</div>
 
 <!-- If chatroom is selected, display messages for that room -->
 <div ng-if="homeVm.currentRoom !== null" class="chat-container col-sm-8">
   <h3>{{homeVm.currentRoom.name}}</h3>
-  <div class="message-list row">
-    <ul>
+  <div class="list-container row">
+    <ul id="message-list">
       <li ng-repeat="message in homeVm.currentRoom.messages" ng-class-even="'even'" class="row">
         <div class="message-container col-sm-10">
           <div class="username">{{message.username}}</div>
-          <div class="content">{{message.content}}</div>
+          <p class="content">{{message.content}}</p>
         </div>
         <div class="sent-at col-sm-2">
           <div class="time">{{message.sentAt | date: 'shortTime'}}</div>

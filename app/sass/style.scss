@@ -66,6 +66,11 @@ input:focus, .btn:focus {
     li {
       margin-bottom: 0.5em;
       cursor: pointer;
+      &:hover {
+        color: #7D7D7A;
+        font-size: 1.2em;
+        @include transition(all, 300ms, ease);
+      }
     }
   }
 }
@@ -90,6 +95,14 @@ input:focus, .btn:focus {
   }
 }
 
+// Add room modal
+button.btn-default{
+  color: #FFF;
+  border-radius: 0 ;
+  border-color: #C1C1C1;
+  background-color: #C1C1C1;
+}
+
 // User modal
 .user-modal {
   .modal-body {
@@ -106,25 +119,43 @@ input:focus, .btn:focus {
   }
 }
 
+// Landing message
+.chat-landing {
+  position: relative;
+  top: 100px;
+  h2 {
+    font-size: 5em;
+    font-weight: 300;
+    text-align: center;
+  }
+  span {
+    display: block;
+    font-size: 1.4em;
+    text-align: center;
+  }
+}
 
 // Chat messages
 .chat-container {
   height: 100%;
   overflow: hidden;
   h3 {
+    position: fixed;
     line-height: 2em;
     padding-bottom: 0.5em;
     color: #7D7D7A;
   }
-  .message-list {
+  .list-container {
+    position: relative;
+    top: 65px;
     height: 100%;
-    padding-bottom: 10px;
+    padding: 0;
     ul {
       list-style: none;
-      padding: 0 0 25px;
+      padding: 0 0 65px;
       overflow: hidden;
       overflow-y: scroll;
-      height: 77%;
+      height: 90%;
     }
     li {
       padding: 1em;
@@ -145,6 +176,7 @@ input:focus, .btn:focus {
 .content {
   font-size: 1.2em;
   font-weight: 300;
+  overflow-wrap: break-word;
 }
 
 .sent-at {
@@ -169,7 +201,11 @@ input:focus, .btn:focus {
     margin: 0;
     border-radius: 0;
     border-left: none;
-    background-color: #DFF1EF;
+    background-color: $accent-color;
+    &:hover {
+      color: black;
+      @include transition(all, 300ms, ease);
+    }
   }
 }
 

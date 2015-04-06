@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
   <label for="username">This name will appear when you send messages</label>
-  <input id="username" type="text" placeholder="Enter Username" ng-model="modalVm.userInput">
+  <input id="username" type="text" placeholder="Enter Username" ng-model="modalVm.userInput" ng-keyup="modalVm.sendOnEnter($event)">
 </div>
 <div class="modal-footer">
     <button class="btn btn-default set-username" ng-click="modalVm.submit()">Set Username</button>

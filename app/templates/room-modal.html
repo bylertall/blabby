@@ -2,9 +2,9 @@
     <h3 class="modal-title">ADD A ROOM</h3>
 </div>
 <div class="modal-body">
-  <input type="text" placeholder="Enter Room Name" ng-model="modalVm.userInput">
+  <input type="text" placeholder="Enter Room Name" ng-model="modalVm.userInput" ng-keyup="modalVm.sendOnEnter($event)">
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="modalVm.submit()">Create Room</button>
-    <button class="btn btn-warning" ng-click="modalVm.cancel()">Cancel</button>
+    <button class="btn btn-default" ng-click="modalVm.submit()">Create Room</button>
+    <button class="btn btn-default" ng-click="modalVm.cancel()">Cancel</button>
 </div>
