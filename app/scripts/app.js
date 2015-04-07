@@ -5,6 +5,7 @@ var app = angular.module('blabby', ['ui.router', 'firebase', 'ui.bootstrap', 'ng
 // Cookie setup
 app.run(['$cookies', '$modal', '$timeout', function($cookies, $modal, $timeout) {
   
+  // Open modal for username input if current user is not already set
   if ( !$cookies.blabbyCurrentUser || $cookies.blabbyCurrentUser === '' ) {
     var modalInstance = $modal.open({
       templateUrl: '/templates/user-modal.html',
@@ -14,13 +15,14 @@ app.run(['$cookies', '$modal', '$timeout', function($cookies, $modal, $timeout) 
       size: 'sm'
     });
 
+    // Give focus to username input field
     modalInstance.opened.then(function() {
       $timeout(function() {
         var elInput = document.getElementById('username-input');
         elInput.focus();
       }, 50);
     });
-
+    // Save username input
     modalInstance.result.then(function(userInput) {
       $cookies.blabbyCurrentUser = userInput;
     });
@@ -40,8 +42,6 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
       templateUrl: '/templates/home.html',
       controller: 'HomeCtrl as homeVm'
     });
-
-
 }]);
 
 
@@ -104,7 +104,7 @@ app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', '
     return vm.currentRoom;
   };
 
-  // Send new message
+  // New message user input
   vm.newMessage = '';
 
   vm.submitNewMessage = function() {
@@ -116,9 +116,10 @@ app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', '
       messageObj.sentAt = (new Date()).toISOString();
       messageObj.username = $cookies.blabbyCurrentUser;
 
-      // clear user input
+      // Clear user input
       vm.newMessage = '';
 
+      // Give focus back to input element after message submission
       $timeout(function() {
         var elInput = document.getElementById('message-input');
         elInput.focus();
@@ -173,16 +174,16 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
 
 // Room factory
 app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, FIREBASE_API){
-  
-  
-  var firebaseRef = new Firebase(FIREBASE_API);
 
+  var firebaseRef = new Firebase(FIREBASE_API);
   var rooms = $firebaseArray(firebaseRef.child('rooms'));
 
   var addRoom = function(roomName) {
-    rooms.$add({name: roomName})
-      .then(function() {
-        console.log('A new room has been added!');
+    rooms.$add({
+      name: roomName
+    })
+    .then(function() {
+      console.log('A new room has been added!');
     });
   };
 
@@ -199,8 +200,8 @@ app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, 
 
 // Message factory
 app.factory('Message', ['$firebaseArray', 'FIREBASE_API', '$timeout', function($firebaseArray, FIREBASE_API, $timeout) {
-  var firebaseRef = new Firebase(FIREBASE_API);
 
+  var firebaseRef = new Firebase(FIREBASE_API);
   var messages = $firebaseArray(firebaseRef.child('messages'));
 
   var addMessage = function(messageObj) {
@@ -209,8 +210,11 @@ app.factory('Message', ['$firebaseArray', 'FIREBASE_API', '$timeout', function($
       roomId: messageObj.roomId,
       sentAt: messageObj.sentAt,
       username: messageObj.username
-    }).then(function() {
+    })
+    .then(function() {
       console.log('A new message was submitted');
+
+      // Scroll to bottom so new message is in view
       $timeout (function() {
         var divMessageList = document.getElementById('message-list');
         divMessageList.scrollTop = divMessageList.scrollHeight;
