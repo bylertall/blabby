@@ -31,7 +31,7 @@
     </ul>
   </div>
   <div class="message-input-container row">
-    <input class="message-input col-sm-10" type="text" placeholder="Write your message here..." ng-model="homeVm.newMessage" ng-keyup="homeVm.sendOnEnter($event)">
+    <input id="message-input" class="message-input col-sm-10" type="text" placeholder="Write your message here..." ng-model="homeVm.newMessage" ng-keyup="homeVm.sendOnEnter($event)">
     <button class="message-send btn btn-default col-sm-2" ng-click="homeVm.submitNewMessage()">Send</button>
   </div>
 </div>

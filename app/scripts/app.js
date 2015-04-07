@@ -3,22 +3,31 @@
 var app = angular.module('blabby', ['ui.router', 'firebase', 'ui.bootstrap', 'ngCookies']);
 
 // Cookie setup
-app.run(['$cookies', '$modal', function($cookies, $modal) {
+app.run(['$cookies', '$modal', '$timeout', function($cookies, $modal, $timeout) {
   
   if ( !$cookies.blabbyCurrentUser || $cookies.blabbyCurrentUser === '' ) {
-    $modal.open({
+    var modalInstance = $modal.open({
       templateUrl: '/templates/user-modal.html',
       controller: 'ModalInstanceCtrl',
       controllerAs: 'modalVm',
       windowClass: 'center-modal user-modal',
       size: 'sm'
-    }).result.then(function(userInput) {
+    });
+
+    modalInstance.opened.then(function() {
+      $timeout(function() {
+        var elInput = document.getElementById('username-input');
+        elInput.focus();
+      }, 50);
+    });
+
+    modalInstance.result.then(function(userInput) {
       $cookies.blabbyCurrentUser = userInput;
     });
   }
-}])
+}]);
 
-app.constant('FIREBASE_API', 'https://blabby.firebaseio.com/')
+app.constant('FIREBASE_API', 'https://blabby.firebaseio.com/');
 
 
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
@@ -30,18 +39,20 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
       url:'/',
       templateUrl: '/templates/home.html',
       controller: 'HomeCtrl as homeVm'
-    })
+    });
 
 
-}])
+}]);
 
 
 /*Controllers*/
 
-app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', function(Room, Message, $modal, $cookies, $state) {
+app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', '$timeout', function(Room, Message, $modal, $cookies, $state, $timeout) {
   var vm = this;
 
   vm.title = 'Blabby';
+
+  // Reload state on click of title
   vm.stateReload = function() {
     $state.reload();
   };
@@ -59,7 +70,15 @@ app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', f
       size: 'sm'
     });
 
-    //Add room to firebase on modal.ok
+    // Give focus to this modal input
+    modalInstance.opened.then(function() {
+      $timeout(function() {
+        var elInput = document.getElementById('room-input');
+        elInput.focus();
+      }, 50);
+    });
+
+    //Add room to firebase on submit()
     modalInstance.result.then(function(roomName) {
       Room.add(roomName);
     });
@@ -69,11 +88,18 @@ app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', f
   // Chatroom content
   vm.currentRoom = null;
 
+  // Click on a room name to bring up messages
   vm.setActiveRoom = function(roomId, roomName) {
     vm.currentRoom = {};
     vm.currentRoom.id = roomId;
     vm.currentRoom.name = roomName;
     vm.currentRoom.messages = Room.messages(roomId);
+
+    // Give focus to this modal input
+    $timeout(function() {
+      var elInput = document.getElementById('message-input');
+      elInput.focus();
+    }, 50);
 
     return vm.currentRoom;
   };
@@ -93,6 +119,11 @@ app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', f
       // clear user input
       vm.newMessage = '';
 
+      $timeout(function() {
+        var elInput = document.getElementById('message-input');
+        elInput.focus();
+      }, 50);
+
       return Message.send(messageObj);
     } else {
       alert('Your message is empty!');
@@ -105,13 +136,13 @@ app.controller('HomeCtrl', ['Room', 'Message', '$modal', '$cookies', '$state', f
       vm.submitNewMessage();
     }
   };
-
-}])
+}]);
 
 app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalInstance, Room) {
   var vm = this;
 
   vm.userInput;
+
 
   // Submit user input
   vm.submit = function() {
@@ -134,14 +165,13 @@ app.controller('ModalInstanceCtrl', ['$modalInstance', 'Room', function($modalIn
       vm.submit();
     }
   };
-
-
-}])
+}]);
 
 
 
 /*Factories*/
 
+// Room factory
 app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, FIREBASE_API){
   
   
@@ -165,9 +195,9 @@ app.factory('Room', ['$firebaseArray', 'FIREBASE_API', function($firebaseArray, 
     add: addRoom,
     messages: getMessages
   }
-  
-}])
+}]);
 
+// Message factory
 app.factory('Message', ['$firebaseArray', 'FIREBASE_API', '$timeout', function($firebaseArray, FIREBASE_API, $timeout) {
   var firebaseRef = new Firebase(FIREBASE_API);
 
@@ -191,4 +221,4 @@ app.factory('Message', ['$firebaseArray', 'FIREBASE_API', '$timeout', function($
   return {
     send: addMessage
   }
-}])
+}]);
